@@ -1,6 +1,6 @@
 {CompositeDisposable} = require 'atom'
 
-module.exports = TransientMark =
+module.exports = TextSelectMode =
   subscriptions: null
 
   activate: (state) ->
