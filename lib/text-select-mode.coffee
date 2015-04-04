@@ -5,7 +5,7 @@ module.exports = TextSelectMode =
 
   activate: (state) ->
     @subscriptions = new CompositeDisposable
-    @subscriptions.add atom.commands.add 'atom-workspace', 'text-select-mode:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-text-editor', 'text-select-mode:toggle': => @toggle()
     @replaceCommands([
       "core:move-up",
       "core:move-down",
@@ -35,6 +35,7 @@ module.exports = TextSelectMode =
       ])
 
   deactivate: ->
+    @cancel()
     @subscriptions.dispose()
 
   serialize: ->
@@ -48,7 +49,7 @@ module.exports = TextSelectMode =
 
       binding = {}
       binding[command] = (event) ->
-        editor = atom.workspace.getActiveEditor()
+        editor = atom.workspace.getActiveTextEditor()
         atom.commands.dispatch(atom.views.getView(editor), newCommand)
         event.stopImmediatePropagation()
 
