@@ -6,7 +6,7 @@
   "activationCommands": {
     "atom-text-editor": "text-select-mode:toggle"
   },
-  "repository": "https://github.com/atom/text-select-mode",
+  "repository": "https://github.com/ldgonza/text-select-mode",
   "license": "MIT",
   "engines": {
     "atom": ">1.50.0"
