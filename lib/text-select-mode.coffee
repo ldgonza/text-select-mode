@@ -14,6 +14,7 @@ module.exports = TextSelectMode =
       "core:move-to-top",
       "core:move-to-bottom",
       "editor:move-to-beginning-of-line",
+      "editor:move-to-first-character-of-line"
       "editor:move-to-end-of-line",
       "editor:move-to-beginning-of-word",
       "editor:move-to-end-of-word",
