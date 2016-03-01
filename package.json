@@ -9,7 +9,7 @@
   "repository": "https://github.com/ldgonza/text-select-mode",
   "license": "MIT",
   "engines": {
-    "atom": ">1.50.0"
+    "atom": ">1.5.0"
   },
   "dependencies": {}
 }
