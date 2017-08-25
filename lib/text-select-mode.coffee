@@ -3,6 +3,13 @@
 module.exports = TextSelectMode =
   subscriptions: null
 
+  config:
+    clearSelection:
+      type: 'boolean'
+      default: false
+      title: 'Clear selection on cancel'
+      description: 'When enabled this will clear selections on cancel commands'
+
   activate: (state) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-text-editor', 'text-select-mode:toggle': => @toggle()
@@ -57,7 +64,6 @@ module.exports = TextSelectMode =
       @subscriptions.add atom.commands.add 'atom-text-editor.text-select-mode', binding
 
   # Add the effect of cancelling text-select-mode in the active editor for the given commands
-  # Do not clear the selection
   subscribeCancelCommands: (commands) ->
     commands.forEach (command) =>
       binding = {}
@@ -69,9 +75,18 @@ module.exports = TextSelectMode =
   toggle: ->
     editor = atom.workspace.getActiveTextEditor()
     view = atom.views.getView(editor)
-    view.classList.toggle "text-select-mode"
+
+    if view.classList.contains('text-select-mode')
+      @cancel()
+    else
+      view.classList.add "text-select-mode"
+
 
   cancel: ->
     editor = atom.workspace.getActiveTextEditor()
     view = atom.views.getView(editor)
+
+    if atom.config.get('text-select-mode.clearSelection')
+      editor.selections.forEach (selection) -> selection.clear()
+
     view.classList.remove "text-select-mode"
