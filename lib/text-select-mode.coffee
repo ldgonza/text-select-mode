@@ -35,6 +35,11 @@ module.exports = TextSelectMode =
       "editor:move-to-end-of-next-paragraph",
     ])
 
+    @deleteAndCancel([
+      "core:delete",
+      "core:backspace"
+    ])
+
     @subscribeCancelCommands([
         "core:cancel",
         "core:copy",
@@ -71,6 +76,18 @@ module.exports = TextSelectMode =
         @cancel()
 
       @subscriptions.add atom.commands.add 'atom-text-editor.text-select-mode', binding
+
+  deleteAndCancel: (commands) ->
+    commands.forEach (command) =>
+      binding = {}
+      binding[command] = (event) =>
+        editor = atom.workspace.getActiveTextEditor()
+        editor.selections.forEach (selection) -> selection.deleteSelectedText()
+        @cancel()
+        event.stopImmediatePropagation()
+
+      @subscriptions.add atom.commands.add 'atom-text-editor.text-select-mode', binding
+
 
   toggle: ->
     editor = atom.workspace.getActiveTextEditor()
