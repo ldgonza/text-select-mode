@@ -12,8 +12,8 @@ The package does not add a keybinding. Be sure to add your own to your keymap.cs
 
 The toggle command will alternatively activate/deactivate text select mode on the current editor.
 
-Upon activation, any move command will behave like a select command. Copying, cutting or pasting text will cancel select mode. The cancel command will also deactivate the mode.
+Upon activation, any move command will behave like a select command. Copying, cutting, pasting or deleting text will cancel select mode. The cancel command will also deactivate the mode.
 
-Upon deactivation, move commands behave like normal. Current selections are not removed (this might change in future versions).
+Upon deactivation, move commands behave like normal. Current selections either remain (default) or not based on settings.
 
 ![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)

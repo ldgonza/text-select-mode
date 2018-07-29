@@ -45,10 +45,25 @@ describe "TextSelectMode", ->
          toggle()
 
       describe "and toggling", ->
+        describe "and delete selection on cancel is on", ->
+          it "cancels selection", ->
+            atom.config.set('text-select-mode.clearSelection', true)
+            atom.commands.dispatch editorView, 'core:move-right'
+            toggle()
+            expect(editor.getSelectedText()).toBe("")
+
+        describe "and delete selection on cancel is off", ->
+          it "does not cancel selection", ->
+            atom.config.set('text-select-mode.clearSelection', false)
+            atom.commands.dispatch editorView, 'core:move-right'
+            toggle()
+            expect(editor.getSelectedText()).toBe("L")
+
         it "toggles off for active text editor", ->
             expect(editorView.classList.contains("text-select-mode")).toBe(true)
             toggle()
             expect(editorView.classList.contains("text-select-mode")).toBe(false)
+
 
       describe "and working with the editor", ->
         it "toggles off on cancel", ->
@@ -69,6 +84,11 @@ describe "TextSelectMode", ->
         it "toggles off on paste", ->
             expect(editorView.classList.contains("text-select-mode")).toBe(true)
             atom.commands.dispatch editorView, 'core:paste'
+            expect(editorView.classList.contains("text-select-mode")).toBe(false)
+
+        it "toggles off on delete", ->
+            expect(editorView.classList.contains("text-select-mode")).toBe(true)
+            atom.commands.dispatch editorView, 'core:delete'
             expect(editorView.classList.contains("text-select-mode")).toBe(false)
 
         describe "and moving around", ->
