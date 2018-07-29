@@ -1,7 +1,7 @@
 {
   "name": "text-select-mode",
   "main": "./lib/text-select-mode",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Selectively turns move commands into select commands",
   "activationCommands": {
     "atom-text-editor": "text-select-mode:toggle"
