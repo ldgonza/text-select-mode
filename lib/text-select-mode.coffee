@@ -13,27 +13,29 @@ module.exports = TextSelectMode =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-text-editor', 'text-select-mode:toggle': => @toggle()
-    @replaceCommands([
-      "core:move-up",
-      "core:move-down",
-      "core:move-left",
-      "core:move-right",
-      "core:move-to-top",
-      "core:move-to-bottom",
-      "editor:move-to-beginning-of-line",
-      "editor:move-to-first-character-of-line"
-      "editor:move-to-end-of-line",
-      "editor:move-to-beginning-of-word",
-      "editor:move-to-end-of-word",
-      "editor:move-to-next-word",
-      "editor:move-to-previous-word",
-      "editor:move-to-next-word-boundary",
-      "editor:move-to-previous-word-boundary",
-      "editor:move-to-beginning-of-previous-paragraph",
-      "editor:move-to-end-of-previous-paragraph",
-      "editor:move-to-beginning-of-next-paragraph",
-      "editor:move-to-end-of-next-paragraph",
-    ])
+    @replaceCommands({
+      "core:move-up": null,
+      "core:move-down": null,
+      "core:move-left": null,
+      "core:move-right": null,
+      "core:move-to-top": null,
+      "core:move-to-bottom": null,
+      "core:page-up": "core:select-page-up",
+      "core:page-down": "core:select-page-down",
+      "editor:move-to-first-character-of-line": null,
+      "editor:move-to-beginning-of-line": null,
+      "editor:move-to-beginning-of-word": null,
+      "editor:move-to-beginning-of-next-word": null,
+      "editor:move-to-beginning-of-next-paragraph": null,
+      "editor:move-to-beginning-of-previous-paragraph": null,
+      "editor:move-to-end-of-line": null,
+      "editor:move-to-end-of-screen-line": "editor:select-to-end-of-line",
+      "editor:move-to-end-of-word": null,
+      "editor:move-to-previous-word-boundary": null,
+      "editor:move-to-previous-subword-boundary": null,
+      "editor:move-to-next-word-boundary": null,
+      "editor:move-to-next-subword-boundary": null,
+    })
 
     @deleteAndCancel([
       "core:delete",
@@ -54,19 +56,24 @@ module.exports = TextSelectMode =
   serialize: ->
 
   # Transform a list of "move" commands each into the corresponding "select" command
+  replaceCommands: (commands) ->
+    for command, selectionCommand of commands
+      if selectionCommand == null
+        newCommand = command.replace("move", "select")
+      else
+        newCommand = selectionCommand
+      @replaceCommand(command, newCommand)
+
   # Stop propagation of original command and dispatch the new one
   # Only for text-select-mode text editors
-  replaceCommands: (commands) ->
-    commands.forEach (command) =>
-      newCommand = command.replace("move", "select")
+  replaceCommand: (command, newCommand) ->
+    binding = {}
+    binding[command] = (event) ->
+      editor = atom.workspace.getActiveTextEditor()
+      atom.commands.dispatch(atom.views.getView(editor), newCommand)
+      event.stopImmediatePropagation()
 
-      binding = {}
-      binding[command] = (event) ->
-        editor = atom.workspace.getActiveTextEditor()
-        atom.commands.dispatch(atom.views.getView(editor), newCommand)
-        event.stopImmediatePropagation()
-
-      @subscriptions.add atom.commands.add 'atom-text-editor.text-select-mode', binding
+    @subscriptions.add atom.commands.add 'atom-text-editor.text-select-mode', binding
 
   # Add the effect of cancelling text-select-mode in the active editor for the given commands
   subscribeCancelCommands: (commands) ->
