@@ -97,3 +97,13 @@ describe "TextSelectMode", ->
             expect(editor.getCursorBufferPosition().row).toBe(0)
             expect(editor.getCursorBufferPosition().column).toBe(1)
             expect(editor.getSelectedText()).toBe("L")
+
+          it "and works with end command", ->
+            toggle()
+            atom.commands.dispatch editorView, 'editor:move-to-end-of-screen-line'
+            atom.commands.dispatch editorView, 'core:move-left'
+            toggle()
+            atom.commands.dispatch editorView, 'editor:move-to-end-of-screen-line'
+            expect(editor.getCursorBufferPosition().row).toBe(0)
+            expect(editor.getCursorBufferPosition().column).toBe(123)
+            expect(editor.getSelectedText()).toBe(".")
